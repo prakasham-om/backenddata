@@ -13,7 +13,7 @@ mongoose.connect('mongodb+srv://rohitsahoo866:prakash1998@cluster0.tynrt9h.mongo
 
 // Define data schema
 const dataSchema = new mongoose.Schema({
-  content: [String]
+  contents: [String] // Array of strings
 });
 
 const Data = mongoose.model('Data', dataSchema);
@@ -24,7 +24,7 @@ app.use(cors());
 app.get('/api/data', async (req, res) => {
   try {
     const data = await Data.findOne();
-    res.json(data ? data.content : '');
+    res.json(data ? data.contents : []);
   } catch (error) {
     console.error('Error fetching data:', error);
     res.status(500).send('Internal server error');
@@ -34,7 +34,7 @@ app.get('/api/data', async (req, res) => {
 app.post('/api/data', async (req, res) => {
   const { content } = req.body;
   try {
-    await Data.findOneAndUpdate({}, { content }, { upsert: true });
+    await Data.findOneAndUpdate({}, { $push: { contents: content } }, { upsert: true });
     res.status(201).send('Data added successfully');
   } catch (error) {
     console.error('Error adding data:', error);
@@ -43,9 +43,9 @@ app.post('/api/data', async (req, res) => {
 });
 
 app.put('/api/data', async (req, res) => {
-  const { content } = req.body;
+  const { contents } = req.body;
   try {
-    await Data.findOneAndUpdate({}, { content });
+    await Data.findOneAndUpdate({}, { contents });
     res.send('Data updated successfully');
   } catch (error) {
     console.error('Error updating data:', error);
