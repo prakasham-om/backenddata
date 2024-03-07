@@ -13,7 +13,7 @@ mongoose.connect('mongodb+srv://rohitsahoo866:prakash1998@cluster0.tynrt9h.mongo
 
 // Define data schema
 const dataSchema = new mongoose.Schema({
-  content: String
+  content: [String]
 });
 
 const Data = mongoose.model('Data', dataSchema);
