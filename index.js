@@ -16,8 +16,8 @@ mongoose.connect('mongodb+srv://rohitsahoo866:prakash1998@cluster0.tynrt9h.mongo
 // Define data schema
 const dataSchema = new mongoose.Schema({
   contents: [String], // Array of strings
-  addCount: { type: Number },
-  updateCount: { type: Number}
+  addCount: { type: Number, default: 0 },
+  updateCount: { type: Number, default: 0 }
 });
 
 const Data = mongoose.model('Data', dataSchema);
@@ -56,7 +56,7 @@ app.put('/api/data/:index', async (req, res) => {
     return res.status(400).send('Content cannot be empty');
   }
   try {
-    const result = await Data.findOneAndUpdate({}, { $set: { [`contents.${index}`]: content }, $inc: { updateCount: 1 } });
+    const result = await Data.findOneAndUpdate({}, { $set: { [`contents.${index}`]: content }, $inc: { updateCount: -1 } });
     if (!result) {
       return res.status(404).send('Data not found');
     }
