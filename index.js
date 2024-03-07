@@ -37,6 +37,9 @@ app.get('/api/data', async (req, res) => {
 
 app.post('/api/data', async (req, res) => {
   const { content } = req.body;
+  if (!content) {
+    return res.status(400).send('Content cannot be empty');
+  }
   try {
     await Data.findOneAndUpdate({}, { $push: { contents: content }, $inc: { addCount: 1 } }, { upsert: true });
     res.status(201).send('Data added successfully');
@@ -46,10 +49,14 @@ app.post('/api/data', async (req, res) => {
   }
 });
 
-app.put('/api/data', async (req, res) => {
+app.put('/api/data/:index', async (req, res) => {
+  const { index } = req.params;
   const { content } = req.body;
+  if (!content) {
+    return res.status(400).send('Content cannot be empty');
+  }
   try {
-    await Data.findOneAndUpdate({}, { $set: { contents: content }, $inc: { updateCount: 1 } });
+    await Data.findOneAndUpdate({}, { $set: { [`contents.${index}`]: content }, $inc: { updateCount: 1 } });
     res.send('Data updated successfully');
   } catch (error) {
     console.error('Error updating data:', error);
