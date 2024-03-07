@@ -28,7 +28,7 @@ app.use(cors());
 app.get('/api/data', async (req, res) => {
   try {
     const data = await Data.findOne();
-    res.json(data ? data.contents : []);
+    res.json(data);
   } catch (error) {
     console.error('Error fetching data:', error);
     res.status(500).send('Internal server error');
