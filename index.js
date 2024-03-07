@@ -32,9 +32,9 @@ app.get('/api/data', async (req, res) => {
 });
 
 app.post('/api/data', async (req, res) => {
-  const { content } = req.body;
+  const { contents } = req.body;
   try {
-    await Data.findOneAndUpdate({}, { $push: { contents: content } }, { upsert: true });
+    await Data.findOneAndUpdate({}, { contents }, { upsert: true });
     res.status(201).send('Data added successfully');
   } catch (error) {
     console.error('Error adding data:', error);
