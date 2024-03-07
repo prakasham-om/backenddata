@@ -56,7 +56,10 @@ app.put('/api/data/:index', async (req, res) => {
     return res.status(400).send('Content cannot be empty');
   }
   try {
-    await Data.findOneAndUpdate({}, { $set: { [`contents.${index}`]: content }, $inc: { updateCount: 1 } });
+    const result = await Data.findOneAndUpdate({}, { $set: { [`contents.${index}`]: content }, $inc: { updateCount: 1 } });
+    if (!result) {
+      return res.status(404).send('Data not found');
+    }
     res.send('Data updated successfully');
   } catch (error) {
     console.error('Error updating data:', error);
