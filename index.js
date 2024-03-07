@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://rohitsahoo866:prakash1998@cluster0.tynrt9h.mongodb.net/dataneur?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb+srv://rohitsahoo866:prakash1998@cluster0.tynrt9h.mongodb.net/dataneuron?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
@@ -41,7 +41,8 @@ app.post('/api/data', async (req, res) => {
     return res.status(400).send('Content cannot be empty');
   }
   try {
-    await Data.findOneAndUpdate({}, { $push: { contents: content }, $inc: { addCount: 1 } }, { upsert: true });
+    const newData = new Data({ contents: [content], addCount: 1, updateCount: 0 });
+    await newData.save();
     res.status(201).send('Data added successfully');
   } catch (error) {
     console.error('Error adding data:', error);
@@ -56,7 +57,7 @@ app.put('/api/data/:index', async (req, res) => {
     return res.status(400).send('Content cannot be empty');
   }
   try {
-    const result = await Data.findOneAndUpdate({}, { $set: { [`contents.${index}`]: content }, $inc: { updateCount: -1 } });
+    const result = await Data.findOneAndUpdate({}, { $set: { [`contents.${index}`]: content }, $inc: { updateCount: 1 } });
     if (!result) {
       return res.status(404).send('Data not found');
     }
