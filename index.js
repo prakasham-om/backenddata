@@ -1,3 +1,5 @@
+// server.js
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -7,13 +9,15 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://rohitsahoo866:prakash1998@cluster0.tynrt9h.mongodb.net/dataneuron?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb+srv://your_mongodb_connection_string', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
 // Define data schema
 const dataSchema = new mongoose.Schema({
-  contents: [String] // Array of strings
+  contents: [String], // Array of strings
+  addCount: { type: Number, default: 0 },
+  updateCount: { type: Number, default: 0 }
 });
 
 const Data = mongoose.model('Data', dataSchema);
@@ -32,9 +36,9 @@ app.get('/api/data', async (req, res) => {
 });
 
 app.post('/api/data', async (req, res) => {
-  const { contents } = req.body;
+  const { content } = req.body;
   try {
-    await Data.findOneAndUpdate({}, { contents }, { upsert: true });
+    await Data.findOneAndUpdate({}, { $push: { contents: content }, $inc: { addCount: 1 } }, { upsert: true });
     res.status(201).send('Data added successfully');
   } catch (error) {
     console.error('Error adding data:', error);
@@ -43,9 +47,9 @@ app.post('/api/data', async (req, res) => {
 });
 
 app.put('/api/data', async (req, res) => {
-  const { contents } = req.body;
+  const { content } = req.body;
   try {
-    await Data.findOneAndUpdate({}, { contents });
+    await Data.findOneAndUpdate({}, { $set: { contents: content }, $inc: { updateCount: 1 } });
     res.send('Data updated successfully');
   } catch (error) {
     console.error('Error updating data:', error);
