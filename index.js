@@ -16,8 +16,8 @@ mongoose.connect('mongodb+srv://rohitsahoo866:prakash1998@cluster0.tynrt9h.mongo
 // Define data schema
 const dataSchema = new mongoose.Schema({
   contents: [String], // Array of strings
-  addCount: { type: Number, default: 0 },
-  updateCount: { type: Number, default: 0 }
+  addCount: { type: Number },
+  updateCount: { type: Number}
 });
 
 const Data = mongoose.model('Data', dataSchema);
