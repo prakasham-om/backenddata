@@ -2,7 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const app = express();
+const cors = require('cors');
 
+app.use(cors());
 mongoose.connect('mongodb+srv://rohitsahoo866:prakash1998@cluster0.tynrt9h.mongodb.net/counter?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
