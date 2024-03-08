@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -19,7 +18,6 @@ const Data = mongoose.model('Data', {
 
 app.use(bodyParser.json());
 
-// Add data route
 app.post('/api/data/add', async (req, res) => {
   try {
     const newData = new Data({
@@ -29,6 +27,16 @@ app.post('/api/data/add', async (req, res) => {
 
     const savedData = await newData.save();
     res.json(savedData);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/api/data', async (req, res) => {
+  try {
+    const allData = await Data.find();
+    res.json(allData);
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: 'Internal server error' });
