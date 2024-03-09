@@ -83,6 +83,14 @@ app.get('/api/data/count', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
+app.delete('/api/data/deleteAll', async (req, res) => {
+  try {
+    await Data.deleteMany({});
+    res.json({ message: 'All data deleted successfully' });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
