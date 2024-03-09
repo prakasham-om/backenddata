@@ -54,9 +54,9 @@ app.put('/api/data/update/:id', async (req, res) => {
         $set: {
           name: req.body.name,
           description: req.body.description,
-          updatedAt: Date.now(),
-          $inc: { updateCount: 1 }
-        }
+          updatedAt: Date.now()
+        },
+        $inc: { updateCount: 1 }
       },
       { new: true }
     );
